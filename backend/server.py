@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import io, os
 import torch
 import torch.nn as nn
@@ -40,6 +40,7 @@ model.eval()
 
 # Setup flask app
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="/")
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 CORS(app)
 
 # Define transform (same as training)
@@ -64,8 +65,10 @@ def predict():
         return jsonify({"error": "no file"}), 400
 
     file = request.files["file"]
-    # Handle PNG with alpha or other formats robustly
-    image = Image.open(io.BytesIO(file.read())).convert("L")  # convert to grayscale
+    try:
+        image = Image.open(io.BytesIO(file.read())).convert("L")
+    except (UnidentifiedImageError, OSError, ValueError):
+        return jsonify({"error": "invalid image"}), 400
 
     img = transform(image).unsqueeze(0)  # [1, 1, 28, 28]
     with torch.no_grad():

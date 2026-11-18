@@ -1,26 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noah's Number Predictor</title>
-    <link href="style.css" rel="stylesheet"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="Draw a digit and see what a small PyTorch neural network predicts.">
+  <title>Number Predictor · MNIST demo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-    <body>
-        <main>
-            <h1><span class="name">Noah's</span> Number Predictor</h1>
-            <section>
-                <div>
-                    <h2>Draw a digit! (0-9)</h2>
-                    <canvas id="canvas" width="500px" height="500px"></canvas>
-                </div>
-                <div class="buttons">
-                    <button id="clear">Clear Canvas</button>
-                    <button id="predict">Predict!</button>
-                </div>
-                <h3 id="prediction">Model Prediction: <span>#</span></h3>
-            </section>
-        </main>
-        <script src="script.js"></script>
-    </body>
+<body>
+  <main class="page">
+    <header class="intro">
+      <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Interactive machine learning demo</p>
+      <h1>Number <span>Predictor.</span></h1>
+      <p class="lede">Draw a single digit. A neural network trained on MNIST will take its best guess.</p>
+    </header>
+
+    <div class="workspace">
+      <section class="card draw-card" aria-labelledby="draw-heading">
+        <div class="card-heading">
+          <div>
+            <p class="step">01 / INPUT</p>
+            <h2 id="draw-heading">Your canvas</h2>
+          </div>
+          <span class="canvas-size">0–9</span>
+        </div>
+        <p class="helper">Draw one large digit in the box below.</p>
+        <div class="canvas-wrap">
+          <canvas id="canvas" width="320" height="320" tabindex="0" aria-label="Digit drawing canvas. Use a pointer to draw, or use arrow keys to move and Space to draw with the keyboard." aria-describedby="canvas-help"></canvas>
+          <div id="keyboard-cursor" class="keyboard-cursor" aria-hidden="true"></div>
+        </div>
+        <p id="canvas-help" class="keyboard-help">Mouse, touch, or pen · Keyboard: arrows to move, Space to draw</p>
+        <div class="actions">
+          <button id="clear" class="button button-secondary" type="button">Clear canvas</button>
+          <button id="predict" class="button button-primary" type="button" disabled>Predict digit <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-heading">
+        <div class="card-heading">
+          <div>
+            <p class="step">02 / OUTPUT</p>
+            <h2 id="result-heading">The prediction</h2>
+          </div>
+          <span class="model-tag">MNIST model</span>
+        </div>
+        <div id="result-panel" class="result-panel" aria-live="polite" aria-atomic="true">
+          <p class="result-caption">PREDICTED DIGIT</p>
+          <div id="digit" class="digit" aria-label="No prediction yet">—</div>
+          <p id="status" class="status">Your result will appear here.</p>
+          <button id="retry" class="button button-retry" type="button" hidden>Try again</button>
+        </div>
+        <p class="model-note">A compact fully connected network processes your drawing as a 28 × 28 grayscale image.</p>
+      </section>
+    </div>
+
+    <footer>Built by Noah Adofina · A small project for learning PyTorch and deployment</footer>
+  </main>
+</body>
 </html>
